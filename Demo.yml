@@ -1,0 +1,88 @@
+openapi: 3.0.3
+info:
+  title: Truexs APIs
+  version: 1.0.0
+  description: >+
+    Node 18 based Express server. Here we have handled unit tests. We have also
+    implemented Commitizen, Eslint, Prettier, Husky, and Mocha.
+
+     - `prettier` - For formatting the code.
+
+     - `commitizen` - For uniforming the commits.
+
+     - `eslint` - For uniforming the code style.
+
+     - `husky` - For checking the lint errors and preventing the difference in code writing style.
+
+     - `mocha`- For testing the code
+
+  contact:
+    name: CHECK
+    email: check@check.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  - url: https://check.check.com/api/v1/check-partner
+    description: Staging Server
+tags:
+  - name: Merchant
+    description: Merchant Related Routes
+  - name: Store
+    description: Store Related Routes
+  - name: KYC
+    description: KYC and Business Proof Validation Routes
+  - name: VPA
+    description: VPA Related Routes
+  - name: Transaction
+    description: Transaction Related Routes
+paths:
+  /merchant/create:
+    get:
+      tags:
+        - Merchant
+      summary: To create Merchant
+      requestBody:
+        description: >-
+          Legal name (Legal Name of the Business or Merchant), brand name (Display
+          name of the Business), merchant type, location, and mobile number are
+          mandatory. Email is optional.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/merchant_create"
+            x-microcks-operation:
+        delay: 100
+        dispatcher: SCRIPT
+        dispatcherRules: |
+          return "check"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              examples:
+                check:
+                  value: |
+                    {
+                      "success": true,
+                      "message": "Merchant created successfully",
+                      "data": {
+                          "merchant_id": "{{request.body/data/merchant_id}}",
+                          "legal_name": "{{request.body/data/legal_name}}",
+                          "brand_name": "{{request.body/data/brand_name}}",
+                          "mobile_number": "{{request.body/data/mobile_number}}"
+                        }
+                    }
+        "400":
+          description: ""
+          content:
+            application/json:
+              examples:
+                bad_request:
+                  value: |
+                    {
+                      "success": false,
+                      "message": "Bad Request"
+                    }
