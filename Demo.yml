@@ -56,7 +56,16 @@ paths:
         delay: 100
         dispatcher: SCRIPT
         dispatcherRules: |
-          return "check"
+          log.info("request content: " + mockRequest.requestContent)
+          def json = new groovy.json.JsonSlurper().parseText(mockRequest.requestContent)
+
+          if (json.data.legal_name == "Ram") {
+            log.info("Legal name is 'Ram'")
+            return "check"
+          } else {
+            log.info("Bad request")
+            return "bad_request"
+          }
       responses:
         "200":
           description: ""
